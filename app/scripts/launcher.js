@@ -1,9 +1,12 @@
 const {ipcRenderer} = require('electron');
 const {dialog, app, BrowserWindow} = require('electron').remote;
 const _ = require('lodash');
-const jsonfile = require('jsonfile');
+const Store = require('electron-store');
 const path = require('path');
 const safeeval = require('notevil');
+const tasklist = require('tasklist');
+
+const store = new Store();
 
 let launchWindow, isRetrying;
 
@@ -126,12 +129,19 @@ function launchGame () {
           appQuit();
         } else if (typeof result === 'string') {
           console.log('Run WGLauncher');
-          launchWindow.webContents.once('did-stop-loading', () => {
-            console.log('Quit');
-            appQuit();
-          });
+          function findLauncher() {
+            tasklist().then((tasks) => {
+              if (tasks.find((x) => x.imageName === 'WGLauncher.exe')) {
+                appQuit();
+              } else {
+                setTimeout(findLauncher, 100);
+              }
+            });
+          }
 
           launchWindow.webContents.executeJavaScript(`window.location.href='${result}'`, false, () => {});
+
+          findLauncher();
         } else {
           // ???
           dialog.showMessageBox(null, {
@@ -158,16 +168,11 @@ function saveSessionData (cookies) {
     const host = cookie.domain[0] === '.' ? cookie.domain.substr(1) : cookie.domain;
     cookie.url = scheme + '://' + host;
   }
-  jsonfile.writeFileSync(getSessionDataPath(), cookies);
+  store.set('cookies', cookies);
 }
 
 function loadSessionData () {
-  let cookies;
-  try {
-    cookies = jsonfile.readFileSync(getSessionDataPath());
-  } catch (e) {
-  }
-  return cookies || [];
+  return store.get('cookies') || [];
 }
 
 function onHangameLoginComplete (event, cookies) {
