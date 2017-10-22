@@ -1,0 +1,76 @@
+@import 'fonts';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  /* Disable input */
+  user-select: none;
+  cursor: default;
+  pointer-events: none;
+}
+
+html, body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+  background: transparent;
+
+  font-family: Roboto-Regular, sans-serif;
+}
+
+.swjpOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1000;
+
+  .overlayContent {
+    opacity: 0;
+    transition: all 1s ease;
+
+    img {
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .statusWrapper {
+      opacity: 0;
+      transition: all .2s;
+
+      h1.status {
+        font-size: 1rem;
+        font-weight: normal;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        margin: 0;
+        padding: 2px;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+      }
+
+      .loaderWrapper {
+        width: 70%;
+        height: 32px;
+        margin: 0 auto;
+
+        .bar-bg {
+          background-color: rgba(255, 255, 255, 0.8) !important;
+        }
+        .indeter-bar {
+          background-color: rgb(80, 195, 199) !important;
+        }
+      }
+    }
+  }
+}
+
+#wvLauncher {
+  opacity: 0;
+}

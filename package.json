@@ -1,0 +1,45 @@
+{
+  "name": "swjp_launcher",
+  "productName": "Soulworker Launcher",
+  "version": "1.0.0",
+  "description": "Soulworker Launcher",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "npm run clean-dist && electron-builder",
+    "pack": "npm run dist --dir",
+    "clean-dist": "rimraf dist"
+  },
+  "keywords": [],
+  "author": "Matej Gorjanc",
+  "license": "MIT",
+  "build": {
+    "appId": "SWJPLauncher",
+    "productName": "Soulworker Launcher",
+    "buildVersion": "1.0.0",
+    "win": {
+      "target": "nsis",
+      "icon": "app/images/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "electron-compile": "^6.4.2",
+    "jsonfile": "^4.0.0",
+    "lodash": "^4.17.4",
+    "notevil": "^1.1.0"
+  },
+  "devDependencies": {
+    "electron-builder": "19.30.0",
+    "electron-prebuilt-compile": "^1.7.9",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
