@@ -73,10 +73,16 @@ const createWindow = (updaterWindow = false) => {
     movable: false,
     frame: false,
     transparent: true,
+
+    show: false
   });
 
   mainWindow.loadURL(`file://${__dirname}/${updaterWindow ? 'updater.html' : 'launcher.html'}`);
   // mainWindow.toggleDevTools();
+
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -109,6 +115,8 @@ function showHangameLogin (event, skipDialog) {
 
     resizable: true,
     movable: true,
+
+    show: false
   });
 
   hangameLoginWindow.loadURL('http://top.hangame.co.jp/logout/');
@@ -131,6 +139,10 @@ function showHangameLogin (event, skipDialog) {
     });
 
     e.preventDefault();
+  });
+
+  hangameLoginWindow.on('ready-to-show', () => {
+    hangameLoginWindow.show();
   });
 
   hangameLoginWindow.once('closed', () => {
