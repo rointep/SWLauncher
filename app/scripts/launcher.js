@@ -32,7 +32,7 @@ function initializeLaunchWindow () {
       type: 'error',
       buttons: [],
       title: 'Soulworker Launcher - Connection error',
-      message: errorCode.toString() + ' ' + errorDescription,
+      message: errorCode.toString() + '\n' + errorDescription,
     });
 
     appQuit();

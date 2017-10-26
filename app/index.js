@@ -89,6 +89,17 @@ const createWindow = (updaterWindow = false) => {
     mainWindow = null;
     app.exit();
   });
+
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
+    dialog.showMessageBox(null, {
+      type: 'error',
+      buttons: [],
+      title: 'Soulworker Launcher - Connection error',
+      message: errorCode.toString() + '\n' + errorDescription,
+    });
+
+    app.exit();
+  });
 };
 
 app.on('ready', () => {
@@ -150,6 +161,17 @@ function showHangameLogin (event, skipDialog) {
 
   hangameLoginWindow.once('closed', () => {
     hangameLoginWindow = null;
+  });
+
+  hangameLoginWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
+    dialog.showMessageBox(null, {
+      type: 'error',
+      buttons: [],
+      title: 'Soulworker Launcher - Connection error',
+      message: errorCode.toString() + '\n' + errorDescription,
+    });
+
+    app.exit();
   });
 
   function checkHostname () {
