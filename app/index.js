@@ -73,6 +73,7 @@ const createWindow = (updaterWindow = false) => {
     movable: false,
     frame: false,
     transparent: true,
+    alwaysOnTop: true,
 
     show: false
   });
@@ -115,6 +116,8 @@ function showHangameLogin (event, skipDialog) {
 
     resizable: true,
     movable: true,
+    modal: true,
+    parent: mainWindow,
 
     show: false
   });
