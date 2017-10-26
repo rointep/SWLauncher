@@ -1,8 +1,12 @@
-const {app, BrowserWindow, dialog, ipcMain} = require('electron');
+const electron = require('electron');
+const {app, BrowserWindow, dialog, ipcMain} = electron;
+const {autoUpdater} = require('electron-updater');
+const isDev = require('electron-is-dev');
 
 let mainWindow;
 let hangameLoginWindow;
 
+/* Single instance check */
 const isSecondInstance = app.makeSingleInstance(() => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
@@ -13,13 +17,56 @@ if (isSecondInstance) {
   app.exit();
 }
 
-const createWindow = () => {
+/* Automatic updates */
+autoUpdater.autoDownload = false;
+
+autoUpdater.on('error', (event, error) => {
+  dialog.showErrorBox('Update error', error.toString());
+  app.exit();
+});
+
+autoUpdater.on('update-available', () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update available',
+    message: 'A new version is available.\nWould you like to download and install it now?',
+    buttons: ['Yes', 'No']
+  }, (buttonIndex) => {
+    if (buttonIndex === 0) {
+      autoUpdater.downloadUpdate();
+      createWindow(true);
+    } else {
+      createWindow();
+    }
+  });
+});
+
+autoUpdater.on('update-not-available', () => {
+  createWindow();
+});
+
+autoUpdater.on('update-downloaded', () => {
+  setImmediate(() => autoUpdater.quitAndInstall());
+});
+
+autoUpdater.on('download-progress', (progress) => {
+  if (mainWindow) {
+    mainWindow.webContents.send('download-progress', progress);
+  }
+});
+
+/* App */
+const createWindow = (updaterWindow = false) => {
+  const {width, height} = electron.screen.getPrimaryDisplay().size;
+  const windowWidth = Math.floor(width / 3.2);
+  const windowHeight = Math.floor(windowWidth / 1.9);
+
   mainWindow = new BrowserWindow({
     title: 'Soulworker Launcher',
     icon: 'app/images/icon.ico',
 
-    width: 512,
-    height: 270,
+    width: windowWidth,
+    height: windowHeight,
 
     center: true,
     resizable: false,
@@ -28,7 +75,7 @@ const createWindow = () => {
     transparent: true,
   });
 
-  mainWindow.loadURL(`file://${__dirname}/launcher.html`);
+  mainWindow.loadURL(`file://${__dirname}/${updaterWindow ? 'updater.html' : 'launcher.html'}`);
   // mainWindow.toggleDevTools();
 
   mainWindow.on('closed', () => {
@@ -37,7 +84,13 @@ const createWindow = () => {
   });
 };
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  if (!isDev) {
+    autoUpdater.checkForUpdates();
+  } else {
+    createWindow();
+  }
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -45,12 +98,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
-
+/* Hangame login */
 function showHangameLogin (event, skipDialog) {
   hangameLoginWindow = new BrowserWindow({
     title: 'Soulworker Launcher',

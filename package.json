@@ -1,14 +1,15 @@
 {
   "name": "swjp_launcher",
   "productName": "Soulworker Launcher",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Soulworker Launcher",
   "main": "app/index.js",
   "scripts": {
     "start": "electron .",
     "dist": "npm run clean-dist && electron-builder",
     "pack": "npm run dist --dir",
-    "clean-dist": "rimraf dist"
+    "clean-dist": "rimraf dist",
+    "release": "build"
   },
   "keywords": [],
   "author": "Matej Gorjanc",
@@ -16,10 +17,13 @@
   "build": {
     "appId": "SWJPLauncher",
     "productName": "Soulworker Launcher",
-    "buildVersion": "1.0.1",
+    "buildVersion": "1.1.0",
     "win": {
       "target": "nsis",
-      "icon": "app/images/icon.ico"
+      "icon": "app/images/icon.ico",
+      "publish": [
+        "github"
+      ]
     },
     "nsis": {
       "oneClick": false,
@@ -28,8 +32,9 @@
   },
   "dependencies": {
     "electron-compile": "^6.4.2",
+    "electron-is-dev": "^0.3.0",
     "electron-store": "^1.3.0",
-    "lodash": "^4.17.4",
+    "electron-updater": "^2.15.0",
     "notevil": "^1.1.0",
     "tasklist": "^3.1.0"
   },

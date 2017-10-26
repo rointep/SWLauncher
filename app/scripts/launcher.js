@@ -1,9 +1,8 @@
 const {ipcRenderer} = require('electron');
 const {dialog, app, BrowserWindow} = require('electron').remote;
-const _ = require('lodash');
 const Store = require('electron-store');
 const path = require('path');
-const safeeval = require('notevil');
+const safeEval = require('notevil');
 const tasklist = require('tasklist');
 
 const store = new Store();
@@ -19,7 +18,6 @@ function initializeLaunchWindow () {
       nodeIntegration: false,
     },
 
-    /* Hide window */
     show: false,
   });
 
@@ -34,7 +32,7 @@ function initializeLaunchWindow () {
       type: 'error',
       buttons: [],
       title: 'Soulworker Launcher - Connection error',
-      message: errorDescription,
+      message: errorCode.toString() + ' ' + errorDescription,
     });
 
     appQuit();
@@ -52,7 +50,7 @@ function checkLogin () {
 
   launchWindow.webContents.once('did-finish-load', () => {
     launchWindow.webContents.executeJavaScript(`document.querySelector('.m-loginPanel .loginPanel_login');`, false, (result) => {
-      if (_.isNull(result)) {
+      if (!result) {
         // Not logged in.
         if (isRetrying) {
           const selected = dialog.showMessageBox(null, {
@@ -100,7 +98,7 @@ function launchGame () {
     launchWindow.webContents.once('did-finish-load', () => {
       launchWindow.webContents.executeJavaScript(`document.querySelector('#container-maintenance') ? '320' : document.querySelector('pre').textContent`, false, (result) => {
         console.log('token=', result);
-        result = safeeval(result);
+        result = safeEval(result);
 
         if (typeof result === 'number') {
           let message;
@@ -129,7 +127,8 @@ function launchGame () {
           appQuit();
         } else if (typeof result === 'string') {
           console.log('Run WGLauncher');
-          function findLauncher() {
+
+          function findLauncher () {
             tasklist().then((tasks) => {
               if (tasks.find((x) => x.imageName === 'WGLauncher.exe')) {
                 appQuit();
@@ -197,9 +196,6 @@ function setLauncherStatusText (text) {
   document.querySelector('h1.status').textContent = text;
 }
 
-/* IPC Events */
-ipcRenderer.on('on-hangame-login-complete', onHangameLoginComplete);
-
 onload = () => {
   document.querySelector('.overlayContent').style.opacity = 1;
 
@@ -214,3 +210,6 @@ onload = () => {
   initializeLaunchWindow();
   checkLogin();
 };
+
+/* IPC Events */
+ipcRenderer.on('on-hangame-login-complete', onHangameLoginComplete);
