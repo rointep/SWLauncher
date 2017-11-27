@@ -28,7 +28,7 @@ function initializeLaunchWindow () {
   });
 
   launchWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
-    dialog.showMessageBox(null, {
+    dialog.showMessageBox(launchWindow, {
       type: 'error',
       buttons: [],
       title: 'Soulworker Launcher - Connection error',
@@ -53,7 +53,7 @@ function checkLogin () {
       if (!result) {
         // Not logged in.
         if (isRetrying) {
-          const selected = dialog.showMessageBox(null, {
+          const selected = dialog.showMessageBox(launchWindow, {
             type: 'warning',
             buttons: ['Retry', 'Cancel'],
             title: 'Soulworker Launcher - Login failed',
@@ -117,7 +117,7 @@ function launchGame () {
               break;
           }
 
-          dialog.showMessageBox(null, {
+          dialog.showMessageBox(launchWindow, {
             type: 'error',
             buttons: [],
             title: 'Soulworker Launcher - Error launching game',
@@ -143,7 +143,7 @@ function launchGame () {
           findLauncher();
         } else {
           // ???
-          dialog.showMessageBox(null, {
+          dialog.showMessageBox(launchWindow, {
             type: 'error',
             buttons: [],
             title: 'Soulworker Launcher - Error launching game',

@@ -91,7 +91,7 @@ const createWindow = (updaterWindow = false) => {
   });
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
-    dialog.showMessageBox(null, {
+    dialog.showMessageBox(mainWindow, {
       type: 'error',
       buttons: [],
       title: 'Soulworker Launcher - Connection error',
@@ -164,7 +164,7 @@ function showHangameLogin (event, skipDialog) {
   });
 
   hangameLoginWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
-    dialog.showMessageBox(null, {
+    dialog.showMessageBox(hangameLoginWindow, {
       type: 'error',
       buttons: [],
       title: 'Soulworker Launcher - Connection error',
