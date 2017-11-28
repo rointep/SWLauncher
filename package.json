@@ -1,7 +1,7 @@
 {
   "name": "swjp_launcher",
   "productName": "Soulworker Launcher",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Soulworker Launcher",
   "main": "app/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "build": {
     "appId": "SWJPLauncher",
     "productName": "Soulworker Launcher",
-    "buildVersion": "1.1.1",
+    "buildVersion": "1.1.2",
     "win": {
       "target": "nsis",
       "icon": "app/images/icon.ico",

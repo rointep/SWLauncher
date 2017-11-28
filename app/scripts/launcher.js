@@ -1,4 +1,5 @@
 const {ipcRenderer} = require('electron');
+const remote = require('electron').remote;
 const {dialog, app, BrowserWindow} = require('electron').remote;
 const Store = require('electron-store');
 const path = require('path');
@@ -28,7 +29,7 @@ function initializeLaunchWindow () {
   });
 
   launchWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
-    dialog.showMessageBox(launchWindow, {
+    dialog.showMessageBox(remote.getCurrentWindow(), {
       type: 'error',
       buttons: [],
       title: 'Soulworker Launcher - Connection error',
@@ -53,7 +54,7 @@ function checkLogin () {
       if (!result) {
         // Not logged in.
         if (isRetrying) {
-          const selected = dialog.showMessageBox(launchWindow, {
+          const selected = dialog.showMessageBox(remote.getCurrentWindow(), {
             type: 'warning',
             buttons: ['Retry', 'Cancel'],
             title: 'Soulworker Launcher - Login failed',
@@ -64,7 +65,7 @@ function checkLogin () {
             appQuit();
             return;
           } else {
-            launchWindow.webContents.getWebContents().session.clearStorageData();
+            launchWindow.webContents.session.clearStorageData();
           }
         }
         ipcRenderer.send('show-hangame-login', isRetrying);
@@ -117,7 +118,7 @@ function launchGame () {
               break;
           }
 
-          dialog.showMessageBox(launchWindow, {
+          dialog.showMessageBox(remote.getCurrentWindow(), {
             type: 'error',
             buttons: [],
             title: 'Soulworker Launcher - Error launching game',
@@ -143,7 +144,7 @@ function launchGame () {
           findLauncher();
         } else {
           // ???
-          dialog.showMessageBox(launchWindow, {
+          dialog.showMessageBox(remote.getCurrentWindow(), {
             type: 'error',
             buttons: [],
             title: 'Soulworker Launcher - Error launching game',
