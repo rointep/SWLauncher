@@ -4,7 +4,8 @@ const {dialog, app, BrowserWindow} = require('electron').remote;
 const Store = require('electron-store');
 const path = require('path');
 const safeEval = require('notevil');
-const tasklist = require('tasklist');
+const childProcess = require('child_process');
+
 
 const store = new Store();
 
@@ -130,11 +131,21 @@ function launchGame () {
           console.log('Run WGLauncher');
 
           function findLauncher () {
-            tasklist().then((tasks) => {
-              if (tasks.find((x) => x.imageName === 'WGLauncher.exe')) {
+            childProcess.execFile('tasklist', function(err, result) {
+              if (err) {
+                dialog.showMessageBox(remote.getCurrentWindow(), {
+                  type: 'error',
+                  buttons: [],
+                  title: 'Soulworker Launcher - Error launching game',
+                  message: 'Can\'t get running process list, exiting...',
+                });
                 appQuit();
               } else {
-                setTimeout(findLauncher, 100);
+                if (result.indexOf('WGLauncher.exe') > -1 || result.indexOf('SoulWorker100.exe') > -1) {
+                  appQuit();
+                } else {
+                  findLauncher();
+                }
               }
             });
           }
