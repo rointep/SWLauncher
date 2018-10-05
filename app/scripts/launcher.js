@@ -11,9 +11,9 @@ const store = new Store();
 
 let launchWindow, isRetrying;
 
-function initializeLaunchWindow () {
+function initializeLaunchWindow() {
   launchWindow = new BrowserWindow({
-    width: 1000,
+    width : 1000,
     height: 800,
 
     webPreferences: {
@@ -23,7 +23,7 @@ function initializeLaunchWindow () {
     show: false,
   });
 
-  //launchWindow.toggleDevTools();
+  // launchWindow.toggleDevTools();
 
   launchWindow.on('closed', () => {
     launchWindow = null;
@@ -31,9 +31,9 @@ function initializeLaunchWindow () {
 
   launchWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
     dialog.showMessageBox(remote.getCurrentWindow(), {
-      type: 'error',
+      type   : 'error',
       buttons: [],
-      title: 'Soulworker Launcher - Connection error',
+      title  : 'Soulworker Launcher - Connection error',
       message: errorCode.toString() + '\n' + errorDescription,
     });
 
@@ -41,7 +41,7 @@ function initializeLaunchWindow () {
   });
 }
 
-function checkLogin () {
+function checkLogin() {
   const cookies = loadSessionData();
   for (let cookie of cookies) {
     launchWindow.webContents.session.cookies.set(cookie, (e) => {
@@ -56,9 +56,9 @@ function checkLogin () {
         // Not logged in.
         if (isRetrying) {
           const selected = dialog.showMessageBox(remote.getCurrentWindow(), {
-            type: 'warning',
+            type   : 'warning',
             buttons: ['Retry', 'Cancel'],
-            title: 'Soulworker Launcher - Login failed',
+            title  : 'Soulworker Launcher - Login failed',
             message: `The launcher was unable to log you in. This may happen if you close the authentication window without logging in, or navigate away from the page. Would you like to try again?`
           });
 
@@ -83,10 +83,11 @@ function checkLogin () {
   });
 }
 
-function launchGame () {
+function launchGame() {
   const cookies = loadSessionData();
   for (let cookie of cookies) {
-    launchWindow.webContents.session.cookies.set(cookie, (e) => {});
+    launchWindow.webContents.session.cookies.set(cookie, (e) => {
+    });
   }
 
   // Generate HGAC.
@@ -120,9 +121,9 @@ function launchGame () {
           }
 
           dialog.showMessageBox(remote.getCurrentWindow(), {
-            type: 'error',
+            type   : 'error',
             buttons: [],
-            title: 'Soulworker Launcher - Error launching game',
+            title  : 'Soulworker Launcher - Error launching game',
             message: 'Unable to start game.\nReason: ' + message
           });
 
@@ -130,13 +131,13 @@ function launchGame () {
         } else if (typeof result === 'string') {
           console.log('Run WGLauncher');
 
-          function findLauncher () {
-            childProcess.execFile('tasklist', function(err, result) {
+          function findLauncher() {
+            childProcess.execFile('tasklist', function (err, result) {
               if (err) {
                 dialog.showMessageBox(remote.getCurrentWindow(), {
-                  type: 'error',
+                  type   : 'error',
                   buttons: [],
-                  title: 'Soulworker Launcher - Error launching game',
+                  title  : 'Soulworker Launcher - Error launching game',
                   message: 'Can\'t get running process list, exiting...',
                 });
                 appQuit();
@@ -150,15 +151,16 @@ function launchGame () {
             });
           }
 
-          launchWindow.webContents.executeJavaScript(`window.location.href='${result}'`, false, () => {});
+          launchWindow.webContents.executeJavaScript(`window.location.href='${result}'`, false, () => {
+          });
 
           findLauncher();
         } else {
           // ???
           dialog.showMessageBox(remote.getCurrentWindow(), {
-            type: 'error',
+            type   : 'error',
             buttons: [],
-            title: 'Soulworker Launcher - Error launching game',
+            title  : 'Soulworker Launcher - Error launching game',
             message: 'Unknown error.'
           });
 
@@ -169,11 +171,11 @@ function launchGame () {
   });
 }
 
-function getSessionDataPath () {
+function getSessionDataPath() {
   return path.join(app.getPath('appData'), 'SwjpLauncher', 'session.json');
 }
 
-function saveSessionData (cookies) {
+function saveSessionData(cookies) {
   for (const cookie of cookies) {
     const scheme = cookie.secure ? 'https' : 'http';
     const host = cookie.domain[0] === '.' ? cookie.domain.substr(1) : cookie.domain;
@@ -182,11 +184,11 @@ function saveSessionData (cookies) {
   store.set('cookies', cookies);
 }
 
-function loadSessionData () {
+function loadSessionData() {
   return store.get('cookies') || [];
 }
 
-function onHangameLoginComplete (event, cookies) {
+function onHangameLoginComplete(event, cookies) {
   saveSessionData(cookies);
   setLauncherStatusTextVisible(true);
   setLauncherStatusText('Connecting');
@@ -196,15 +198,15 @@ function onHangameLoginComplete (event, cookies) {
   checkLogin();
 }
 
-function appQuit () {
+function appQuit() {
   ipcRenderer.send('app-quit');
 }
 
-function setLauncherStatusTextVisible (show) {
+function setLauncherStatusTextVisible(show) {
   document.querySelector('.statusWrapper').style.opacity = show ? 1 : 0;
 }
 
-function setLauncherStatusText (text) {
+function setLauncherStatusText(text) {
   document.querySelector('h1.status').textContent = text;
 }
 
@@ -213,7 +215,7 @@ onload = () => {
 
   const indeterminateProgress = new Mprogress({
     template: 3,
-    parent: '.loaderWrapper'
+    parent  : '.loaderWrapper'
   }).start();
 
   document.addEventListener('dragover', event => event.preventDefault());
