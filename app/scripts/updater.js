@@ -2,11 +2,11 @@ const {ipcRenderer} = require('electron');
 
 let progressBar;
 
-function setLauncherStatusTextVisible (show) {
+function setLauncherStatusTextVisible(show) {
   document.querySelector('.statusWrapper').style.opacity = show ? 1 : 0;
 }
 
-function setDownloadProgress (event, progress) {
+function setDownloadProgress(event, progress) {
   if (progressBar) {
     progressBar.set(progress.percent / 100);
   }
@@ -19,7 +19,7 @@ onload = () => {
 
   progressBar = new Mprogress({
     template: 1,
-    parent: '.loaderWrapper'
+    parent  : '.loaderWrapper'
   }).start();
 
   document.addEventListener('dragover', event => event.preventDefault());

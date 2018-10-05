@@ -27,8 +27,8 @@ autoUpdater.on('error', (event, error) => {
 
 autoUpdater.on('update-available', () => {
   dialog.showMessageBox({
-    type: 'info',
-    title: 'Update available',
+    type   : 'info',
+    title  : 'Update available',
     message: 'A new version is available.\nWould you like to download and install it now?',
     buttons: ['Yes', 'No']
   }, (buttonIndex) => {
@@ -63,15 +63,15 @@ const createWindow = (updaterWindow = false) => {
 
   mainWindow = new BrowserWindow({
     title: 'Soulworker Launcher',
-    icon: 'app/images/icon.ico',
+    icon : 'app/images/icon.ico',
 
-    width: windowWidth,
+    width : windowWidth,
     height: windowHeight,
 
-    center: true,
-    resizable: false,
-    movable: false,
-    frame: false,
+    center     : true,
+    resizable  : false,
+    movable    : false,
+    frame      : false,
     transparent: true,
     alwaysOnTop: true,
 
@@ -92,9 +92,9 @@ const createWindow = (updaterWindow = false) => {
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
     dialog.showMessageBox(mainWindow, {
-      type: 'error',
+      type   : 'error',
       buttons: [],
-      title: 'Soulworker Launcher - Connection error',
+      title  : 'Soulworker Launcher - Connection error',
       message: errorCode.toString() + '\n' + errorDescription,
     });
 
@@ -117,18 +117,18 @@ app.on('window-all-closed', () => {
 });
 
 /* Hangame login */
-function showHangameLogin (event, skipDialog) {
+function showHangameLogin(event, skipDialog) {
   hangameLoginWindow = new BrowserWindow({
     title: 'Soulworker Launcher',
-    icon: 'app/images/icon.ico',
+    icon : 'app/images/icon.ico',
 
-    width: 800,
+    width : 800,
     height: 600,
 
     resizable: true,
-    movable: true,
-    modal: true,
-    parent: mainWindow,
+    movable  : true,
+    modal    : true,
+    parent   : mainWindow,
 
     show: false
   });
@@ -140,9 +140,9 @@ function showHangameLogin (event, skipDialog) {
     hangameLoginWindow.webContents.session.cookies.get({}, (error, cookies) => {
       if (error) {
         dialog.showMessageBox(mainWindow, {
-          type: 'error',
+          type   : 'error',
           buttons: [],
-          title: 'Soulworker Launcher - An error occured',
+          title  : 'Soulworker Launcher - An error occured',
           message: 'There was an error retrieving your login data. The application will now exit.'
         });
         app.quit();
@@ -165,16 +165,16 @@ function showHangameLogin (event, skipDialog) {
 
   hangameLoginWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame) => {
     dialog.showMessageBox(hangameLoginWindow, {
-      type: 'error',
+      type   : 'error',
       buttons: [],
-      title: 'Soulworker Launcher - Connection error',
+      title  : 'Soulworker Launcher - Connection error',
       message: errorCode.toString() + '\n' + errorDescription,
     });
 
     app.exit();
   });
 
-  function checkHostname () {
+  function checkHostname() {
     if (hangameLoginWindow) {
       hangameLoginWindow.webContents.executeJavaScript(`location.hostname === 'www.hangame.co.jp'`, false, (result) => {
         if (result) {
@@ -190,9 +190,9 @@ function showHangameLogin (event, skipDialog) {
 
   if (!skipDialog) {
     dialog.showMessageBox(hangameLoginWindow, {
-      type: 'info',
+      type   : 'info',
       buttons: [],
-      title: 'Soulworker Launcher - Authentication required',
+      title  : 'Soulworker Launcher - Authentication required',
       message: 'Please log in to your Soulworker account.'
     }, () => {
     });
